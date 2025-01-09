@@ -23,13 +23,10 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
 
-vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>k", "<cmd>lnext<CR>zz")
-vim.keymap.set("n", "<leader>j", "<cmd>lprev<CR>zz")
+vim.keymap.set("n", "<leader>]", vim.diagnostic.goto_next)
+vim.keymap.set("n", "<leader>[", vim.diagnostic.goto_prev)
 
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
-vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 vim.keymap.set(
     "n",
@@ -37,21 +34,43 @@ vim.keymap.set(
     "oif err != nil {<CR>}<Esc>O"
 )
 
-vim.keymap.set("n", "<leader><leader>", function()
-    vim.cmd("so")
-end)
+vim.keymap.set("n", "<leader>go", "<cmd>!go run *.go<CR>")
+vim.keymap.set("n", "<leader>mod", "<cmd>!go mod tidy && go mod vendor<CR>")
 
 vim.keymap.set("n", "<C-e>", function()
     vim.diagnostic.open_float()
 end)
 
--- crazy stuff
-vim.keymap.set("i", "'", "''<Left>")
-vim.keymap.set("i", "\"", "\"\"<Left>")
-vim.keymap.set("i", "(", "()<Left>")
-vim.keymap.set("i", "{", "{}<Left>")
-vim.keymap.set("i", "[", "[]<Left>")
+vim.keymap.set("n", "<leader>r", function()
+    vim.lsp.buf.rename()
+end
+)
 
+-- use leader+[hjkl] to select the active split
+vim.keymap.set("n", "<leader>h", "<C-w>h")
+vim.keymap.set("n", "<leader>", "<C-w>j")
+vim.keymap.set("n", "<leader>k", "<C-w>k")
+vim.keymap.set("n", "<leader>l", "<C-w>l")
+
+-- use ctrl+[hjkl] to resize the active split
+vim.keymap.set("n", "<C-h>", "<CMD>vertical resize -5<CR>")
+vim.keymap.set("n", "<C-j>", "<CMD>horizontal resize +5<CR>")
+vim.keymap.set("n", "<C-k>", "<CMD>horizontal resize -5<CR>")
+vim.keymap.set("n", "<C-l>", "<CMD>vertical resize +5<CR>")
+
+-- use leader+[HJKL] to move the active split
+vim.keymap.set("n", "<leader>H", "<CMD>vertical resize +5<CR>")
+vim.keymap.set("n", "<leader>J", "<CMD>vertical resize -5<CR>")
+vim.keymap.set("n", "<leader>K", "<CMD>horizontal resize +5<CR>")
+vim.keymap.set("n", "<leader>L", "<CMD>horizontal resize -5<CR>")
+
+-- crazy stuff
+-- vim.keymap.set("i", "'", "''<Left>")
+-- vim.keymap.set("i", "\"", "\"\"<Left>")
+-- vim.keymap.set("i", "(", "()<Left>")
+-- vim.keymap.set("i", "{", "{}<Left>")
+-- vim.keymap.set("i", "[", "[]<Left>")
+--
 -- ruby stuff
 -- arrays
 -- vim.keymap.set("n", "<leader>w", "i%w[]<Left>")
@@ -59,7 +78,7 @@ vim.keymap.set("i", "[", "[]<Left>")
 -- vim.keymap.set("n", "<leader>aw", "a<Space>%w[]<Left>")
 -- vim.keymap.set("n", "<leader>ai", "a<Space>%i[]<Left>")
 -- string interpolation
-vim.keymap.set({"n"}, "<leader>#", "i#{}<Left>")
+vim.keymap.set({ "n" }, "<leader>#", "i#{}<Left>")
 
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
-
+vim.keymap.set("n", "<leader>nnp", "<CMD>NoNeckPain<CR>")

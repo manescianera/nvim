@@ -19,7 +19,7 @@ return {
                 },
 
                 groups = {
-                    border = "muted",
+                    border = "surface",
                     link = "iris",
                     panel = "surface",
 
@@ -49,9 +49,12 @@ return {
                     h6 = "foam",
                 },
 
-                vim.cmd[[colorscheme rose-pine]]
+                vim.cmd.colorscheme("rose-pine"),
+                -- main
+                vim.cmd.highlight("WinSeparator guibg=#191724 guifg=#1f1d2e")
+                -- moon
+                -- vim.cmd.highlight("WinSeparator guibg=#232136 guifg=#2a273f")
             })
-
         end,
     }
 }
