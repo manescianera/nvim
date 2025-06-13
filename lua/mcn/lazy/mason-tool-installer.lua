@@ -20,12 +20,6 @@ return {
 				"prettier",
 				"shfmt",
 				"stylua",
-
-				-- Linters
-				"golangci-lint",
-				"eslint",
-				"shellcheck",
-				"luacheck",
 			},
 			run_on_start = true,
 			integrations = {

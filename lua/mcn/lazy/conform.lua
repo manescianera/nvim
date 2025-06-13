@@ -6,18 +6,18 @@ return {
 		require("conform").setup({
 			formatters_by_ft = {
 				go = { "gofumpt", "goimports" },
-				python = "ruff",
-				lua = { "stylua", "luacheck" },
+				python = { "ruff" },
+				lua = { "stylua" },
+				sh = { "shfmt" },
 
-				javascript = { "biome", "eslint" },
-				typescript = { "biome", "eslint" },
-				json = { "biome", "eslint" },
-				html = { "prettier", "eslint" },
-				css = { "prettier", "eslint" },
+				javascript = { "biome" },
+				typescript = { "biome" },
+				json = { "biome" },
+				html = { "prettier" },
+				css = { "prettier" },
 
-				yaml = { "prettier", "eslint" },
-				markdown = { "prettier", "eslint" },
-				sh = { "shfmt", "shellcheck" },
+				yaml = { "prettier" },
+				markdown = { "prettier" },
 			},
 			format_on_save = {
 				timeout_ms = 500,
