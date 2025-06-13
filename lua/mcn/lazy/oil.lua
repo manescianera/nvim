@@ -26,16 +26,16 @@ return {
 					conf.col = col
 					conf.row = row
 
-					-- vim.api.nvim_create_autocmd("BufEnter", {
-					-- 	buffer = conf.bufnr,
-					-- 	callback = function()
-					-- 		vim.keymap.set("n", "<Esc>", "<cmd>close<CR>", {
-					-- 			buffer = conf.bufnr,
-					-- 			silent = true,
-					-- 		})
-					-- 	end,
-					-- })
-					--
+					vim.api.nvim_create_autocmd("BufEnter", {
+						buffer = conf.bufnr,
+						callback = function()
+							vim.keymap.set("n", "q", "<cmd>close<CR>", {
+								buffer = conf.bufnr,
+								silent = true,
+							})
+						end,
+					})
+
 					return conf
 				end,
 			},
