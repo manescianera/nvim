@@ -1,3 +1,4 @@
+-- rose pine theme
 return {
 	{
 		"rose-pine/neovim",
@@ -48,13 +49,8 @@ return {
 					h5 = "pine",
 					h6 = "foam",
 				},
-
-				vim.cmd.colorscheme("rose-pine-main"),
-				-- main
-				vim.cmd.highlight("WinSeparator guibg=#191724 guifg=#1f1d2e"),
-				-- moon
-				-- vim.cmd.highlight("WinSeparator guibg=#232136 guifg=#2a273f"),
 			})
+			vim.cmd.colorscheme("rose-pine-main")
 		end,
 	},
 }

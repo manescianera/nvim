@@ -1,3 +1,4 @@
+-- centers the opened buffer
 return {
 	"shortcuts/no-neck-pain.nvim",
 	version = "2.0.5",

@@ -1,3 +1,4 @@
+-- AI code completions
 return {
 	{
 		"supermaven-inc/supermaven-nvim",

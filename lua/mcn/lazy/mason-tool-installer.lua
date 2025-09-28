@@ -1,3 +1,4 @@
+-- tool installer for Mason
 return {
 	"WhoIsSethDaniel/mason-tool-installer.nvim",
 	opts = {},
@@ -16,7 +17,7 @@ return {
 				"gofumpt",
 				"goimports",
 				"ruff",
-				"biome",
+				-- "biome",
 				"prettier",
 				"shfmt",
 				"stylua",

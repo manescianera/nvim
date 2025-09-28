@@ -1,3 +1,4 @@
+-- Nvim Treesitter configurations and abstraction layer (highlighting)
 return {
 	"nvim-treesitter/nvim-treesitter",
 	build = ":TSUpdate",

@@ -1,1 +1,1 @@
-require('mcn')
+require("mcn")

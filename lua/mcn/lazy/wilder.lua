@@ -1,3 +1,4 @@
+-- command completions
 return {
 	"gelguy/wilder.nvim",
 	dependencies = {

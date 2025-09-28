@@ -1,3 +1,4 @@
+-- LSP support for Mason
 return {
 	"mason-org/mason-lspconfig.nvim",
 	opts = {},

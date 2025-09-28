@@ -1,3 +1,4 @@
+-- DAP for Go
 return {
 	"leoluz/nvim-dap-go",
 	config = function()

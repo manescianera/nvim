@@ -1,3 +1,4 @@
+-- code formatter
 return {
 	"stevearc/conform.nvim",
 	opts = {},
@@ -10,12 +11,14 @@ return {
 				lua = { "stylua" },
 				sh = { "shfmt" },
 
-				javascript = { "biome" },
-				typescript = { "biome" },
-				json = { "biome" },
+				typescript = { "prettier" },
+				typescriptreact = { "prettier" },
+				javascript = { "prettier" },
+				javascriptreact = { "prettier" },
+				json = { "prettier" },
+				jsonc = { "prettier" },
 				html = { "prettier" },
 				css = { "prettier" },
-
 				yaml = { "prettier" },
 				markdown = { "prettier" },
 			},
