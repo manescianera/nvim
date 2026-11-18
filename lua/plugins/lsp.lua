@@ -43,6 +43,18 @@ if vim.fn.executable("go") == 1 then
 	vim.list_extend(servers, { "gopls", "templ" })
 end
 
+-- Formatters: only ask mason for what this host can actually build or extract.
+local tools = { "ruff", "prettier", "shfmt" }
+if vim.fn.executable("go") == 1 then
+	vim.list_extend(tools, { "gofumpt", "goimports" })
+end
+if vim.fn.executable("cargo") == 1 then
+	vim.list_extend(tools, { "rustfmt" })
+end
+if vim.fn.executable("unzip") == 1 then
+	vim.list_extend(tools, { "stylua" }) -- mason unpacks the prebuilt zip
+end
+
 return {
 	{
 		"mason-org/mason.nvim", -- installs/manages the external tools below
@@ -65,7 +77,7 @@ return {
 		"WhoIsSethDaniel/mason-tool-installer.nvim", -- formatters (servers come from mason-lspconfig)
 		dependencies = { "mason-org/mason.nvim" },
 		opts = {
-			ensure_installed = { "rustfmt", "gofumpt", "goimports", "ruff", "prettier", "shfmt", "stylua" },
+			ensure_installed = tools,
 			run_on_start = true,
 		},
 	},
