@@ -36,8 +36,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
--- Servers we actually want running.
-local servers = { "lua_ls", "gopls", "pyright", "ruff", "ts_ls", "jsonls", "templ" }
+-- Servers we actually want running. Go tooling is only installed where a Go
+-- toolchain exists (servers often have none, and mason would fail at every start).
+local servers = { "lua_ls", "pyright", "ruff", "ts_ls", "jsonls" }
+if vim.fn.executable("go") == 1 then
+	vim.list_extend(servers, { "gopls", "templ" })
+end
 
 return {
 	{
