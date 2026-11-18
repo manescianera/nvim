@@ -11,14 +11,15 @@ require("keymaps")
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"--branch=stable",
-		"https://github.com/folke/lazy.nvim.git",
-		lazypath,
-	})
+	local repo = "https://github.com/folke/lazy.nvim.git"
+	local args = { "git", "clone", "--filter=blob:none", "--branch=stable", repo, lazypath }
+	vim.fn.system(args)
+
+	if vim.v.shell_error ~= 0 then
+		-- Servers whose git config rewrites github https URLs to ssh (no GitHub key)
+		-- can only clone with the user config ignored.
+		vim.fn.system({ "env", "GIT_CONFIG_GLOBAL=/dev/null", "GIT_CONFIG_SYSTEM=/dev/null", unpack(args) })
+	end
 end
 
 vim.opt.rtp:prepend(lazypath)

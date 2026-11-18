@@ -1,0 +1,56 @@
+---
+name: provision-machine
+description: Set up or resync any machine in the mcn fleet (onca, pardus, atrox, bazzite/rog, puma). Use when the user says "setup X like Y", "provision <host>", "sync skills/config to <host>", "bootstrap a new machine", or mentions bringing a machine in line with the others. Encodes the fleet map, the dotfiles bare-repo bootstrap, per-OS steps, and the agent stack (pi/omp/paseo/ollama).
+---
+
+# Fleet provisioning runbook
+
+## Fleet map (verified 2026-10-01)
+
+| Host | OS | Role | Notes |
+|---|---|---|---|
+| onca | macOS arm64 (MBP M2 32GB) | Main dev machine, full desktop | Tailscale 100.68.118.33 |
+| pardus | macOS arm64 (MBP M1 16GB) | Headless always-on server, clamshell | Tailscale 100.74.125.106 |
+| atrox | Debian 13 | Server: Docker (stash, vaultwarden, pocket-id, dufs, AnonAddy); Hetzner storage box mounted at `/mnt/banginis` | Tailscale 100.101.107.35; runs gopass + paseo daemon (systemd user unit); pi 1.0.4 (bun) + agent-browser, no omp; legacy pi-node tree at `~/.local/share/pi-node/` provides node/npx for MCP (`PATH` via Linux block in `.config/zsh/env.zsh`) |
+| bazzite / rog | Linux (Bazzite) | Desktop; paseo + pi + ollama | Tailscale 100.123.178.81; two ssh aliases, same host |
+| puma | Android | paseo client (user's phone) | Tailscale 100.74.180.68 |
+| lynx, serval | macOS / iOS | Family (kotryna@) — **unmanaged** | Never provision |
+| uncia | — | Decommissioned | Photos live on Hetzner box via atrox |
+
+## Source of truth
+
+**`git.mcn.lt:2222/mcn/dotfiles.git`** — bare git managing `$HOME` (`git-dir: ~/.dotfiles`, alias `cfg`).
+
+- Branches: `main` (OS-neutral only — never brew/macOS paths/launchd) + per-host `onca`, `pardus`, `atrox`.
+- Tracking is explicit: `.gitignore` denies all, `!`-rules re-allow listed paths. New path = new `!`-rule first.
+- **Never commit secrets** (ssh/gnupg/gopass/.env/history). Secrets come from gopass at shell startup (`UPE_KEY`, Slack/Stremio tokens).
+- **Never `cfg clean`** — work-tree is `$HOME`. Use `trash`.
+- Ask the user when machine data looks stale or missing.
+
+## Bootstrap a managed machine
+
+1. Tailscale up + ssh reachable from onca; sudo works.
+2. Clone dotfiles:
+   ```sh
+   git clone --bare ssh://git@git.mcn.lt:2222/mcn/dotfiles.git "$HOME/.dotfiles"
+   alias cfg='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+   cfg config status.showUntrackedFiles no
+   cfg checkout <host-branch>   # back up existing dotfiles first — this overwrites
+   ```
+3. **macOS (onca/pardus)**: install Homebrew + `gpg` + `gopass` manually first, then:
+   ```sh
+   brew bundle --file="$HOME/Brewfile"
+   bash "$HOME/scripts/setup.sh"
+   bash "$HOME/scripts/macos-defaults.sh"   # onca only
+   ```
+4. **Linux (atrox/bazzite)**: `apt install zsh tmux helix git bat lf mpv fzf gopass gnupg` (bazzite: use distro package manager), then `cfg checkout <host-branch>`. No pinentry-mac on Linux — install `pinentry-gtk2` or `pinentry-qt`. zshrc auto-sources zsh plugins from `/usr/share/zsh*/plugins/...`.
+5. Secrets: `gopass` store must be reachable (its remote on git.mcn.lt); confirm `UPE_KEY` + tokens resolve at shell startup. apt dpkg was corrupted on atrox 2026-10; if `apt install gopass` fails, fetch the .deb (database-shim build, SHA256 95098d...8fd048) to `/tmp/gopass.deb`, verify, then `dpkg -i`.
+   - **Headless gopass (atrox, verified 2026-10-04)**: the mcn `<root@nakas.dev>` key has NO passphrase at all (stripped 2026-10-04 on all hosts; update from a peer host if a runbook copy is older), so decryption works non-interactively with zero prompts. Non-interactive gopass/gpg over ssh works with stdin closed: `ssh atrox 'gopass show paseo/atrox' </dev/null`. If a future key import brings back a passphrase-protected key, delete it (`gpg --batch --yes --delete-secret-and-public-key 8B11A9E62F545D607B455AE1F0EF1D4F41B609E8`) and import a passphraseless export from onca; key id always 8B11A9E62F545D607B455AE1F0EF1D4F41B609E8 (uid root@nakas.dev).
+6. Agent stack (where wanted): `pi` + `omp` (bun-installed), paseo daemon, Ollama cloud accounts — mirror config from a working machine (`~/.omp/agent/config.yml`, `models.yml`) rather than hand-writing it.
+7. Skills: sync `~/.agents/skills` (and `~/.pi/agent/skills`, `~/.omp/agent/skills` where present) from a source machine or dotfiles.
+
+## Rules
+
+- Ask before provisioning lynx/serval or any new machine not in the map.
+- When data here conflicts with the machine's live state, the live state wins — flag the mismatch and update this runbook.
+- After changes to a host that should be fleet-wide, commit them to the dotfiles repo (`cfg add` → commit → push), not just to the host.
